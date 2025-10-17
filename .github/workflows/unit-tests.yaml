@@ -1,10 +1,13 @@
 name: Unit Tests (Cross-Platform)
 
+env:
+  VCPKG_COMMIT: 3fdbb3d3a8e676ba0204ff2a7b7a09d10b12ef25
+
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ master, dev ]
   pull_request:
-    branches: [ main, dev ]
+    branches: [ master, dev ]
 
 jobs:
   run-tests:
@@ -26,10 +29,22 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: latest
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
+          runVcpkgInstall: true
 
       - name: Install yaml-cpp
         run: vcpkg install yaml-cpp
+
+      - name: Compile test runner (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Write-Host "Compiling with MSVC..."
+          mkdir build
+          cd build
+          cl ../testing/run-tests.cpp /EHsc /Fe:run-tests.exe `
+           /I"${{ github.workspace }}/vcpkg/installed/x64-windows/include" `
+           /link /LIBPATH:"${{ github.workspace }}/vcpkg/installed/x64-windows/lib" yaml-cpp.lib
 
       - name: Compile test runner
         shell: bash
@@ -37,22 +52,18 @@ jobs:
           set -e
           mkdir -p build
           cd build
-
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            echo "Compiling with MSVC..."
-            cl ../testing/run-tests.cpp /EHsc /Fe:run-tests.exe ^
-             /I"${{ github.workspace }}\vcpkg\installed\x64-windows\include" ^
-             /link /LIBPATH:"${{ github.workspace }}\vcpkg\installed\x64-windows\lib" yaml-cpp.lib
-          elif [[ "$RUNNER_OS" == "macOS" ]]; then
+          
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
             echo "Compiling with Clang (macOS)..."
             clang++ ../testing/run-tests.cpp -std=c++17 -lyaml-cpp \
               -I${{ github.workspace }}/vcpkg/installed/x64-osx/include \
               -L${{ github.workspace }}/vcpkg/installed/x64-osx/lib -o run-tests
           else
             echo "Compiling with GCC (Linux)..."
-            g++ ../testing/run-tests.cpp -std=c++17 -lyaml-cpp \
+            g++ ../testing/run-tests.cpp -std=c++17 \
               -I${{ github.workspace }}/vcpkg/installed/x64-linux/include \
-              -L${{ github.workspace }}/vcpkg/installed/x64-linux/lib -o run-tests
+              -L${{ github.workspace }}/vcpkg/installed/x64-linux/lib \
+              -lyaml-cpp -o run-tests
           fi
 
       - name: Run tests
