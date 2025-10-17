@@ -40,21 +40,21 @@ jobs:
           mkdir build
           cd build
           cl ../testing/run-tests.cpp /EHsc /Fe:run-tests.exe `
-           /I"${{ github.workspace }}/vcpkg/installed/x64-windows/include" `
-           /link /LIBPATH:"${{ github.workspace }}/vcpkg/installed/x64-windows/lib" yaml-cpp.lib
+           /I"${{ github.workspace }}/vcpkg_installed/x64-windows/include" `
+           /link /LIBPATH:"${{ github.workspace }}/vcpkg_installed/x64-windows/lib" yaml-cpp.lib
 
-      # - name: Compile test runner (macOS)
-      #   if: runner.os == 'macOS'
-      #   shell: bash
-      #   run: |
-      #     set -e
-      #     mkdir -p build && cd build
-      #     echo "Compiling with Clang (macOS)..."
-      #     ls ${{ github.workspace }}/vcpkg/installed/*/include/yaml-cpp || true
-      #     clang++ ../testing/run-tests.cpp -std=c++17 \
-      #       -I${{ github.workspace }}/vcpkg/installed/x64-osx/include \
-      #       -L${{ github.workspace }}/vcpkg/installed/x64-osx/lib \
-      #       -lyaml-cpp -o run-tests
+      - name: Compile test runner (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -e
+          mkdir -p build && cd build
+          echo "Compiling with Clang (macOS)..."
+          ls ${{ github.workspace }}/vcpkg_installed/*/include/yaml-cpp || true
+          clang++ ../testing/run-tests.cpp -std=c++17 \
+            -I${{ github.workspace }}/vcpkg_installed/x64-osx/include \
+            -L${{ github.workspace }}/vcpkg_installed/x64-osx/lib \
+            -lyaml-cpp -o run-tests
 
       - name: Compile test runner (Linux)
         shell: bash
@@ -65,8 +65,8 @@ jobs:
 
           echo "Compiling with GCC (Linux)..."
           g++ ../testing/run-tests.cpp -std=c++17 \
-            -I${{ github.workspace }}/vcpkg/installed/x64-linux/include \
-            -L${{ github.workspace }}/vcpkg/installed/x64-linux/lib \
+            -I${{ github.workspace }}/vcpkg_installed/x64-linux/include \
+            -L${{ github.workspace }}/vcpkg_installed/x64-linux/lib \
             -lyaml-cpp -o run-tests
 
       - name: Run tests
