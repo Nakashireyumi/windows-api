@@ -52,9 +52,16 @@ jobs:
           
           if [[ "$RUNNER_OS" == "macOS" ]]; then
             echo "Compiling with Clang (macOS)..."
-            clang++ ../testing/run-tests.cpp -std=c++17 -lyaml-cpp \
-              -I${{ github.workspace }}/vcpkg/installed/arm64-osx/include \
-              -L${{ github.workspace }}/vcpkg/installed/arm64-osx/lib -o run-tests
+            if [ -d "${{ github.workspace }}/vcpkg/installed/arm64-osx/include" ]; then
+              TRIPLET=arm64-osx
+            else
+              TRIPLET=x64-osx
+            fi
+            
+            clang++ ../testing/run-tests.cpp -std=c++17 \
+              -I${{ github.workspace }}/vcpkg/installed/$TRIPLET/include \
+              -L${{ github.workspace }}/vcpkg/installed/$TRIPLET/lib \
+              -lyaml-cpp -o run-tests
           else
             echo "Compiling with GCC (Linux)..."
             g++ ../testing/run-tests.cpp -std=c++17 \
