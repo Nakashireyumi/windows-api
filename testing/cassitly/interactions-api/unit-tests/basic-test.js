@@ -1,10 +1,11 @@
 // test/cassitly/interactions-api/unit-tests/basic-test.js
 // This file path is for vibe coders lol
 
-import WebSocket from "ws";
-import fs from "fs";
-import path from "path";
-import yaml from "js-yaml";
+const WebSocket = require("ws");
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const { expect } = require("chai");
 
 // ---------------------------
 // Load configuration dynamically
@@ -53,7 +54,7 @@ function send(ws, obj) {
 describe("Python GUI WebSocket Server", () => {
   let ws;
 
-  beforeAll(async () => {
+  before(async () => {
     await new Promise((r) => setTimeout(r, 500));
     ws = new WebSocket(WS_URL);
     await new Promise((resolve, reject) => {
@@ -62,44 +63,44 @@ describe("Python GUI WebSocket Server", () => {
     });
   });
 
-  afterAll(() => {
+  after(() => {
     ws.close();
   });
 
-  test("rejects unauthorized messages", async () => {
+  it("rejects unauthorized messages", async () => {
     const res = await send(ws, { action: "reload", token: "wrong" });
-    expect(res.status).toBe("error");
-    expect(res.error.message).toBe("unauthorized");
+    expect(res.status).to.equal("error");
+    expect(res.error.message).to.equal("unauthorized");
   });
 
-  test("rejects invalid JSON", async () => {
+  it("rejects invalid JSON", async () => {
     await new Promise((resolve) => {
       ws.once("message", (msg) => {
         const res = JSON.parse(msg);
-        expect(res.status).toBe("error");
-        expect(res.error.message).toBe("invalid_json");
+        expect(res.status).to.equal("error");
+        expect(res.error.message).to.equal("invalid_json");
         resolve();
       });
       ws.send("{ invalid_json");
     });
   });
 
-  test("reload action works", async () => {
+  it("reload action works", async () => {
     const res = await send(ws, { action: "reload", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.message).toBe("Handlers reloaded");
-    expect(typeof res.result.count).toBe("number");
+    expect(res.status).to.equal("ok");
+    expect(res.result.message).to.equal("Handlers reloaded");
+    expect(typeof res.result.count).to.equal("number");
   });
 
-  test("unsupported action gives proper error", async () => {
+  it("unsupported action gives proper error", async () => {
     const res = await send(ws, { action: "nonexistent", token: TOKEN });
-    expect(res.status).toBe("error");
-    expect(res.error.message).toBe("unsupported_action");
+    expect(res.status).to.equal("error");
+    expect(res.error.message).to.equal("unsupported_action");
   });
 
-  test("invalid action type (non-string) rejected", async () => {
+  it("invalid action type (non-string) rejected", async () => {
     const res = await send(ws, { action: 1234, token: TOKEN });
-    expect(res.status).toBe("error");
-    expect(res.error.message).toBe("invalid_action");
+    expect(res.status).to.equal("error");
+    expect(res.error.message).to.equal("invalid_action");
   });
 });

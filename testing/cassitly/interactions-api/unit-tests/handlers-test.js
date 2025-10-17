@@ -1,10 +1,11 @@
 // test/cassitly/interactions-api/unit-tests/handlers-test.js
 // This file path is for vibe coders lol
 
-import fs from "fs";
-import path from "path";
-import yaml from "js-yaml";
-import WebSocket from "ws";
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const WebSocket = require("ws");
+const { expect } = require("chai");
 
 // ---------------------------
 // Load configuration dynamically
@@ -53,7 +54,7 @@ function send(ws, obj) {
 describe("Python GUI Handlers (via WebSocket)", () => {
   let ws;
 
-  beforeAll(async () => {
+  before(async () => {
     // Give the Python server time to start
     await new Promise((r) => setTimeout(r, 500));
     ws = new WebSocket(WS_URL);
@@ -63,90 +64,90 @@ describe("Python GUI Handlers (via WebSocket)", () => {
     });
   });
 
-  afterAll(() => {
+  after(() => {
     ws.close();
   });
 
   // ----------- Core handler tests -----------
 
-  test("move handler works", async () => {
+  it("move handler works", async () => {
     const res = await send(ws, { action: "move", x: 100, y: 150, token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.moved_to).toEqual([100, 150]);
+    expect(res.status).to.equal("ok");
+    expect(res.result.moved_to).to.deep.equal([100, 150]);
   });
 
-  test("click handler works", async () => {
+  it("click handler works", async () => {
     const res = await send(ws, { action: "click", x: 200, y: 250, button: "right", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.clicked).toEqual([200, 250]);
-    expect(res.result.button).toBe("right");
+    expect(res.status).to.equal("ok");
+    expect(res.result.clicked).to.deep.equal([200, 250]);
+    expect(res.result.button).to.equal("right");
   });
 
-  test("dragrel handler works", async () => {
+  it("dragrel handler works", async () => {
     const res = await send(ws, { action: "dragrel", x: 10, y: 15, duration: 0.1, token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.dragged_rel).toEqual([10, 15]);
+    expect(res.status).to.equal("ok");
+    expect(res.result.dragged_rel).to.deep.equal([10, 15]);
   });
 
-  test("dragto handler works", async () => {
+  it("dragto handler works", async () => {
     const res = await send(ws, { action: "dragto", x: 300, y: 400, token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.dragged_to).toEqual([300, 400]);
+    expect(res.status).to.equal("ok");
+    expect(res.result.dragged_to).to.deep.equal([300, 400]);
   });
 
-  test("scroll handler works", async () => {
+  it("scroll handler works", async () => {
     const res = await send(ws, { action: "scroll", clicks: -200, token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.scrolled).toBe(-200);
+    expect(res.status).to.equal("ok");
+    expect(res.result.scrolled).to.equal(-200);
   });
 
-  test("keydown handler works", async () => {
+  it("keydown handler works", async () => {
     const res = await send(ws, { action: "keydown", key: "a", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.keydown).toBe("a");
+    expect(res.status).to.equal("ok");
+    expect(res.result.keydown).to.equal("a");
   });
 
-  test("keyup handler works", async () => {
+  it("keyup handler works", async () => {
     const res = await send(ws, { action: "keyup", key: "a", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.keyup).toBe("a");
+    expect(res.status).to.equal("ok");
+    expect(res.result.keyup).to.equal("a");
   });
 
-  test("press handler works", async () => {
+  it("press handler works", async () => {
     const res = await send(ws, { action: "press", key: "enter", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.pressed).toBe("enter");
+    expect(res.status).to.equal("ok");
+    expect(res.result.pressed).to.equal("enter");
   });
 
-  test("type handler works", async () => {
+  it("type handler works", async () => {
     const res = await send(ws, { action: "type", text: "Hello", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.typed).toBe("Hello");
+    expect(res.status).to.equal("ok");
+    expect(res.result.typed).to.equal("Hello");
   });
 
-  test("screenshot handler saves file", async () => {
+  it("screenshot handler saves file", async () => {
     const res = await send(ws, { action: "screenshot", name: "test_snap.png", token: TOKEN });
-    expect(res.status).toBe("ok");
-    expect(res.result.saved).toMatch(/test_snap\.png$/);
+    expect(res.status).to.equal("ok");
+    expect(res.result.saved).to.match(/test_snap\.png$/);
   });
 
   // ----------- Error case tests -----------
 
-  test("move handler rejects missing params", async () => {
+  it("move handler rejects missing params", async () => {
     const res = await send(ws, { action: "move", token: TOKEN });
-    expect(res.status).toBe("error");
-    expect(res.error.message).toBe("invalid_params");
+    expect(res.status).to.equal("error");
+    expect(res.error.message).to.equal("invalid_params");
   });
 
-  test("dragto handler rejects missing coords", async () => {
+  it("dragto handler rejects missing coords", async () => {
     const res = await send(ws, { action: "dragto", token: TOKEN });
-    expect(res.status).toBe("error");
-    expect(res.error.message).toBe("invalid_params");
+    expect(res.status).to.equal("error");
+    expect(res.error.message).to.equal("invalid_params");
   });
 
-  test("type handler rejects empty text", async () => {
+  it("type handler rejects empty text", async () => {
     const res = await send(ws, { action: "type", text: "", token: TOKEN });
-    expect(res.status).toBe("error");
-    expect(res.error.message).toBe("No text to type");
+    expect(res.status).to.equal("error");
+    expect(res.error.message).to.equal("No text to type");
   });
 });
