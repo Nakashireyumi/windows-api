@@ -63,15 +63,24 @@ async def handle_message(msg: dict) -> str:
     if not action or not isinstance(action, str):
         return err("invalid_action", "Missing or non-string 'action'")
 
+    # --- Dynamic reload hook ---
+    if action == "reload":
+        try:
+            handlers.clear()
+            load_handlers()
+            return ok({"message": "Handlers reloaded", "count": len(handlers)})
+        except Exception as e:
+            return err("reload_failed", {"exception": str(e), "traceback": traceback.format_exc()})
+
     handler = handlers.get(action)
     if not handler:
         return err("unsupported_action", f"Action '{action}' not supported")
 
     try:
-        result = await handler(msg, {"screenshotdir": SCREENSHOT_DIR})
+        result = await handler(msg, {"screenshot_dir": SCREENSHOT_DIR})
         return json.dumps(result)
     except Exception as e:
-        return err("executionerror", {"exception": str(e), "traceback": traceback.formatexc()})
+        return err("executionerror", {"exception": str(e), "traceback": traceback.format_exc()})
 
 # ---------------------------
 # WebSocket Server
