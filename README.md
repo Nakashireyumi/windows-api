@@ -1,5 +1,5 @@
 # Windows API
-Is a tool supposedly used to control windows autonomously. Built for Large Language Models (LLMs), to use easily. By converting windows user inputs into JSON, via a websocket.
+Is a tool used to control windows autonomously. Built for Large Language Models (LLMs), to use easily. By converting windows user inputs into JSON, via a websocket.
 <br><br>The Windows API has a bunch of avaliable handlers via the interaction api (which is an package built under the windows-api to interact with windows, like a user).
 View the [handlers documentation](./docs/interactions-api/handlers/Getting%20Started.md) to get started.
 <br><br>If you would like a general guide on getting started with the windows API, visit [this guide here](./docs/Getting%20Started%20with%20the%20windows-api.md)
