@@ -34,16 +34,22 @@ pip install -r src/contributions/cassitly/python/requirements.txt
 deactivate
 
 # Lanuching the client
-g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp" src/global/niwatori/launch-applications.cpp -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib" -lyaml-cpp -o launch-applications
+g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp"
+ src/global/niwatori/launch-applications.cpp -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib"
+ -lyaml-cpp -o launch-applications
 launch-applications
 ```
 If you're on windows, use this command
 ```cmd
-g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp" src/global/niwatori/launch-applications.cpp -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib" -static -lstdc++fs -lyaml-cpp -o launch-applications
+g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp"
+ src/global/niwatori/launch-applications.cpp -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib"
+ -static -lstdc++fs -lyaml-cpp -o launch-applications
 ```
 instead of
 ```cmd
-g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp" src/global/niwatori/launch-applications.cpp -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib" -lyaml-cpp -o launch-applications
+g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp"
+ src/global/niwatori/launch-applications.cpp -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib"
+ -lyaml-cpp -o launch-applications
 ```
 <br>Now windows-api's websocket should be running. You can test it by running the [example gui client](./src/contributions/cassitly/python/examples/gui-client)
 <br>Fair warning tho, it will execute actions using your mouse and keyboard.
