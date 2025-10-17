@@ -33,17 +33,24 @@ async function runTests() {
     console.log(`\n=== Running tests for package: ${pkg} ===`);
 
     // Launch backend requirements if defined
-    const reqs = config.requirements?.[pkg] || [];
+    const reqConfig = config.requirements?.[pkg];
     const backends = [];
 
-    for (const req of reqs) {
-      const reqPath = path.resolve(req);
-      console.log(`🚀 Starting backend: ${reqPath}`);
-      const backend = startProcess("python", [reqPath]);
-      backends.push(backend);
+    if (reqConfig && reqConfig.files?.length) {
+      const { files: reqFiles, metadata = {} } = reqConfig;
 
-      // Give backend a moment to start (customize if needed)
-      await new Promise((r) => setTimeout(r, 3000));
+      for (const reqFile of reqFiles) {
+        const reqPath = path.resolve(reqFile);
+        const isPython = metadata.python === true;
+        const command = isPython ? "python" : "node";
+
+        console.log(`🚀 Starting backend (${isPython ? "Python" : "Node"}): ${reqPath}`);
+        const backend = startProcess(command, [reqPath]);
+        backends.push(backend);
+
+        // Give backend a moment to start
+        await new Promise((r) => setTimeout(r, 3000));
+      }
     }
 
     // Run all test files for this package
