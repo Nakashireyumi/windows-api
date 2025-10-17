@@ -10,7 +10,7 @@ import websockets
 # ---------------------------
 def load_config():
     # Find base directory relative to this file
-    base_dir = Path(__file__).resolve().parent  # directory where THIS script lives
+    base_dir = Path(__file__).resolve().parent[5]  # directory where THIS script lives
     config_path = base_dir / "src/resources/gui/config/authentication.yaml"
 
     # Optional: if file not found, fallback to project root
