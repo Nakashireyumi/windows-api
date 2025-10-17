@@ -1,0 +1,10 @@
+# Local development environment files
+local
+.vscode
+
+# Python files
+__pycache__
+
+# C++ compiled files
+launch-applications.exe
+launch-applications.obj
