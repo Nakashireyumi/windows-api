@@ -16,7 +16,7 @@ Right now, we currently don't have a way to auto-install, setup, and bootstrap t
 ```cmd
 git clone https://github.com/Nakashireyumi/windows-api.git
 ```
-2. Installing and setting up the environment
+2. Installing dependencies and setting up the environment
 <br>This requires [vcpkg](https://vcpkg.io/en/), [gcc](https://gcc.gnu.org/), and [python](https://www.python.org/).
 ```cmd
 cd windows-api
