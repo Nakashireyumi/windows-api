@@ -1,4 +1,6 @@
 # src/resources/launcher/packages.yaml
+# this filepath is for vibe coders
+
 packages:
   python:
     gui-controller: "src.contributions.cassitly.python.interactions-api"
