@@ -1,0 +1,9 @@
+# config.yaml
+host: "127.0.0.1"
+port: 8765
+auth_token: "replace-with-a-strong-secret"
+screenshot_dir: "./screenshots"
+
+# Optional pyautogui defaults
+failsafe: true
+pause: 0.05

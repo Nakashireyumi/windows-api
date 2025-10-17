@@ -1,0 +1,8 @@
+# src/resources/launcher/packages.yaml
+packages:
+  python:
+    gui-controller: "src.contributions.cassitly.python.interactions-api"
+    configurator: "src.contributions.cassitly.python.configurator"
+    
+    # Example package for documentation
+    # gui-client: "src.contributions.cassitly.python.examples.gui-client"
