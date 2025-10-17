@@ -51,6 +51,7 @@ jobs:
           set -e
           mkdir -p build && cd build
           echo "Compiling with Clang (macOS)..."
+          ls ${{ github.workspace }}/vcpkg/installed/*/include/yaml-cpp || true
           clang++ ../testing/run-tests.cpp -std=c++17 \
             -I${{ github.workspace }}/vcpkg/installed/x64-osx/include \
             -L${{ github.workspace }}/vcpkg/installed/x64-osx/lib \
