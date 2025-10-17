@@ -7,7 +7,7 @@ import importlib
 import traceback
 import os
 
-def load_package_map(path=Path("src/resources/launcher/packages.yaml")):
+def load_package_map(path=Path("src/resources/packages.yaml")):
     with open(path, "r") as f:
         data = yaml.safe_load(f)
     return data.get("packages", {}).get("python", {})
