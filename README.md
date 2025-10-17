@@ -21,7 +21,7 @@ git clone https://github.com/Nakashireyumi/windows-api.git
 ```cmd
 cd windows-api
 
-vcpkg install yaml-cpp nlohmann-json
+vcpkg install
 pip install venv # If not already installed
 
 # Activating the python venv
@@ -54,5 +54,5 @@ g++ -std=c++17 -I"your-vcpkg-path/packages/yaml-cpp_x64-windows/include/yaml-cpp
  -L"your-vcpkg-path/packages/yaml-cpp_x64-windows/lib"
  -lyaml-cpp -o launch-applications
 ```
-<br>Now windows-api's websocket should be running. You can test it by running the [example gui client](./src/contributions/cassitly/python/examples/gui-client)
+<br>Now windows-api's websocket should be running. You can test it by running the [example interactions client](./src/contributions/cassitly/python/examples/interactions-client)
 <br>Fair warning tho, it will execute actions using your mouse and keyboard.
