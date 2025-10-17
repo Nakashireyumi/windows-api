@@ -1,0 +1,66 @@
+name: Unit Tests (Cross-Platform)
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  run-tests:
+    name: Run Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: latest
+
+      - name: Install yaml-cpp
+        run: vcpkg install yaml-cpp
+
+      - name: Compile test runner
+        shell: bash
+        run: |
+          set -e
+          mkdir -p build
+          cd build
+
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            echo "Compiling with MSVC..."
+            cl ../testing/run-tests.cpp /EHsc /Fe:run-tests.exe ^
+             /I"${{ github.workspace }}\vcpkg\installed\x64-windows\include" ^
+             /link /LIBPATH:"${{ github.workspace }}\vcpkg\installed\x64-windows\lib" yaml-cpp.lib
+          elif [[ "$RUNNER_OS" == "macOS" ]]; then
+            echo "Compiling with Clang (macOS)..."
+            clang++ ../testing/run-tests.cpp -std=c++17 -lyaml-cpp \
+              -I${{ github.workspace }}/vcpkg/installed/x64-osx/include \
+              -L${{ github.workspace }}/vcpkg/installed/x64-osx/lib -o run-tests
+          else
+            echo "Compiling with GCC (Linux)..."
+            g++ ../testing/run-tests.cpp -std=c++17 -lyaml-cpp \
+              -I${{ github.workspace }}/vcpkg/installed/x64-linux/include \
+              -L${{ github.workspace }}/vcpkg/installed/x64-linux/lib -o run-tests
+          fi
+
+      - name: Run tests
+        shell: bash
+        run: |
+          cd build
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            ./run-tests.exe
+          else
+            ./run-tests
+          fi

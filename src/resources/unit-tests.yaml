@@ -1,0 +1,8 @@
+# src/resources/unit-test.yaml
+# This filepath above is for vibe coders
+
+packages:
+  "interactions-api": [
+    "testing/cassitly/interactions/unit-tests/basic-test.js",
+    "testing/cassitly/interactions/unit-tests/handlers-test.js"
+  ]
