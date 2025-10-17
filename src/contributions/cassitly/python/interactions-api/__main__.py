@@ -8,8 +8,21 @@ import websockets
 # ---------------------------
 # Load configuration from YAML
 # ---------------------------
-def load_config(path="src/resources/gui/config/authentication.yaml"):
-    with open(path, "r") as f:
+def load_config():
+    # Find base directory relative to this file
+    base_dir = Path(__file__).resolve().parent  # directory where THIS script lives
+    config_path = base_dir / "src/resources/gui/config/authentication.yaml"
+
+    # Optional: if file not found, fallback to project root
+    if not config_path.exists():
+        # Search upwards (useful if launched from another directory)
+        project_root = Path(__file__).resolve().parents[2]  # adjust as needed
+        config_path = project_root / "src/resources/gui/config/authentication.yaml"
+
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found at: {config_path}")
+
+    with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 cfg = load_config()

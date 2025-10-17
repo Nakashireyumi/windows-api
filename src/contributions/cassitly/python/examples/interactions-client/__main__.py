@@ -8,7 +8,7 @@ import yaml
 from pathlib import Path
 
 # Load configuration
-CONFIG_PATH = Path(__file__).resolve().parents[4] / "resources" / "gui" / "config" / "authentication.yaml"
+CONFIG_PATH = Path(__file__).resolve().parents[5] / "resources" / "gui" / "config" / "authentication.yaml"
 
 def load_config():
     if not CONFIG_PATH.exists():
