@@ -1,0 +1,23 @@
+{
+  "name": "unit-tests",
+  "version": "0.0.0",
+  "description": "A unit test for the interactions-api from the windows-api for neurosama",
+  "license": "ISC",
+  "author": "Cassitly",
+  "type": "commonjs",
+  "main": "launch.js",
+  "scripts": {
+    "test": "node run-tests.js"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "jest": "^30.2.0",
+    "js-yaml": "^4.1.0",
+    "path": "^0.12.7",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "chai": "^6.2.0",
+    "mocha": "^11.7.4"
+  }
+}
