@@ -1,5 +1,8 @@
 name: Unit Tests (Cross-Platform)
 
+env:
+  VCPKG_COMMIT: 3fdbb3d3a8e676ba0204ff2a7b7a09d10b12ef25
+
 on:
   push:
     branches: [ master, dev ]
@@ -26,6 +29,7 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
+          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
           runVcpkgInstall: true
 
       - name: Install yaml-cpp
