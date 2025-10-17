@@ -1,0 +1,1 @@
+The entire codebase is meant to be ran from the main root. Not through individual directories under your name
