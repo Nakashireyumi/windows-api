@@ -31,6 +31,7 @@ jobs:
         with:
           vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
           runVcpkgInstall: true
+          vcpkgTriplet: x64-osx
 
       - name: Compile test runner (Windows)
         if: runner.os == 'Windows'
@@ -43,32 +44,30 @@ jobs:
            /I"${{ github.workspace }}/vcpkg/installed/x64-windows/include" `
            /link /LIBPATH:"${{ github.workspace }}/vcpkg/installed/x64-windows/lib" yaml-cpp.lib
 
-      - name: Compile test runner
+      - name: Compile test runner (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -e
+          mkdir -p build && cd build
+          echo "Compiling with Clang (macOS)..."
+          clang++ ../testing/run-tests.cpp -std=c++17 \
+            -I${{ github.workspace }}/vcpkg/installed/x64-osx/include \
+            -L${{ github.workspace }}/vcpkg/installed/x64-osx/lib \
+            -lyaml-cpp -o run-tests
+
+      - name: Compile test runner (Linux)
         shell: bash
         run: |
           set -e
           mkdir -p build
           cd build
-          
-          if [[ "$RUNNER_OS" == "macOS" ]]; then
-            echo "Compiling with Clang (macOS)..."
-            if [ -d "${{ github.workspace }}/vcpkg/installed/arm64-osx/include" ]; then
-              TRIPLET=arm64-osx
-            else
-              TRIPLET=x64-osx
-            fi
-            
-            clang++ ../testing/run-tests.cpp -std=c++17 \
-              -I${{ github.workspace }}/vcpkg/installed/$TRIPLET/include \
-              -L${{ github.workspace }}/vcpkg/installed/$TRIPLET/lib \
-              -lyaml-cpp -o run-tests
-          else
-            echo "Compiling with GCC (Linux)..."
-            g++ ../testing/run-tests.cpp -std=c++17 \
-              -I${{ github.workspace }}/vcpkg/installed/x64-linux/include \
-              -L${{ github.workspace }}/vcpkg/installed/x64-linux/lib \
-              -lyaml-cpp -o run-tests
-          fi
+
+          echo "Compiling with GCC (Linux)..."
+          g++ ../testing/run-tests.cpp -std=c++17 \
+            -I${{ github.workspace }}/vcpkg/installed/x64-linux/include \
+            -L${{ github.workspace }}/vcpkg/installed/x64-linux/lib \
+            -lyaml-cpp -o run-tests
 
       - name: Run tests
         shell: bash
