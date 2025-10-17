@@ -1,1 +1,0 @@
-print("[NOT IMPLEMENTED] nwi-api package")
