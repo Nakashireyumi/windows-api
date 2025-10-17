@@ -10,6 +10,10 @@ output.txt
 __pycache__
 .venv
 
+# Nodejs files
+node_modules
+# package-lock.json is not here, because we want to lock the package caches
+
 # C++ compiled files
 launch-applications.exe
 launch-applications.obj
