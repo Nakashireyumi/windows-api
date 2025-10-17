@@ -32,9 +32,6 @@ jobs:
           vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
           runVcpkgInstall: true
 
-      - name: Install yaml-cpp
-        run: vcpkg install yaml-cpp
-
       - name: Compile test runner (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
