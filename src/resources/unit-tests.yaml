@@ -3,6 +3,16 @@
 
 packages:
   "interactions-api": [
-    "testing/cassitly/interactions/unit-tests/basic-test.js",
-    "testing/cassitly/interactions/unit-tests/handlers-test.js"
+    "testing/cassitly/interactions-api/unit-tests/basic-test.js",
+    # "testing/cassitly/interactions-api/unit-tests/handlers-test.js" # This requires the Python GUI to be running
+    # In which, github workflows is in CLI mode.
   ]
+
+requirements: # This is used to fetch and start the required backend to run the unit tests above
+  "interactions-api":
+    files: [
+      "src/contributions/cassitly/launcher.py"
+    ]
+    metadata: {
+      python: true
+    }
