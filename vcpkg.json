@@ -1,0 +1,8 @@
+{
+  "name": "windows-api",
+  "version": "1.0.0",
+  "description": "Cross-platform test runner for Windows API project",
+  "dependencies": [
+    "yaml-cpp"
+  ]
+}
