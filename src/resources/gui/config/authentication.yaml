@@ -1,4 +1,6 @@
-# config.yaml
+# src/resources/gui/config/authentication.yaml
+# This file path is for vibe coders lol
+
 host: "127.0.0.1"
 port: 8765
 auth_token: "replace-with-a-strong-secret"
