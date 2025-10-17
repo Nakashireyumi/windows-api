@@ -70,6 +70,6 @@ async def handle(msg, context):
     pyautogui.dragRel(int(dx), int(dy), duration=duration, button=button)
     return {"status": "ok", "result": {"dragged_rel": [int(dx), int(dy)], "button": button}}
 ```
-Your arguments will be passed in msg (by the gui-client handler), and context is an argument passed by the interactions-api itself.
+Your arguments will be passed in msg (by the interactions-client handler), and context is an argument passed by the interactions-api itself.
 <br><br>The msg argument can contain your defined arguments, they do not have to be defined by the interactions-api. They are defined by the client.
 <br><br>Though, the context is defined by the websocket server (the interactions-api)
