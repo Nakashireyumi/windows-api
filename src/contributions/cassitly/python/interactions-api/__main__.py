@@ -9,15 +9,19 @@ import websockets
 # Load configuration from YAML
 # ---------------------------
 def load_config():
-    # Find base directory relative to this file
-    base_dir = Path(__file__).resolve().parent[5]  # directory where THIS script lives
-    config_path = base_dir / "src/resources/gui/config/authentication.yaml"
+    # Get the directory of this script
+    current_dir = Path(__file__).resolve().parent
 
-    # Optional: if file not found, fallback to project root
-    if not config_path.exists():
-        # Search upwards (useful if launched from another directory)
-        project_root = Path(__file__).resolve().parents[2]  # adjust as needed
-        config_path = project_root / "src/resources/gui/config/authentication.yaml"
+    # Walk upward until we find "windows-api" folder (the project root)
+    for parent in current_dir.parents:
+        if parent.name == "windows-api":
+            project_root = parent
+            break
+    else:
+        raise RuntimeError("Could not locate 'windows-api' directory above this file.")
+
+    # Build path to the YAML config file
+    config_path = project_root / "src" / "resources" / "gui" / "config" / "authentication.yaml"
 
     if not config_path.exists():
         raise FileNotFoundError(f"Config file not found at: {config_path}")
