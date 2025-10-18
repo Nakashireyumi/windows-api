@@ -88,14 +88,18 @@ async def handle_message(msg: dict) -> str:
             return ok({"message": "Handlers reloaded", "count": len(handlers)})
         except Exception as e:
             return err("reload_failed", {"exception": str(e), "traceback": traceback.format_exc()})
+    # --- Shutdown action ---
+    elif action == "shutdown":
+        exit(0) # Exit
 
-    handler = handlers.get(action)
-    if not handler:
-        return err("unsupported_action", f"Action '{action}' not supported")
-
-    try:
-        result = await handler(msg, {"screenshot_dir": SCREENSHOT_DIR})
-        return json.dumps(result)
+    else:
+        handler = handlers.get(action)
+        if not handler:
+            return err("unsupported_action", f"Action '{action}' not supported")
+    
+        try:
+            result = await handler(msg, {"screenshot_dir": SCREENSHOT_DIR})
+            return json.dumps(result)
     except Exception as e:
         return err("executionerror", {"exception": str(e), "traceback": traceback.format_exc()})
 
