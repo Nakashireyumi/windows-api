@@ -20,3 +20,6 @@ launch-applications.obj
 
 # Websocket Server output
 screenshots
+
+# Ignore install
+vcpkg_installed
