@@ -100,8 +100,8 @@ async def handle_message(msg: dict) -> str:
         try:
             result = await handler(msg, {"screenshot_dir": SCREENSHOT_DIR})
             return json.dumps(result)
-    except Exception as e:
-        return err("executionerror", {"exception": str(e), "traceback": traceback.format_exc()})
+        except Exception as e:
+            return err("executionerror", {"exception": str(e), "traceback": traceback.format_exc()})
 
 # ---------------------------
 # WebSocket Server
