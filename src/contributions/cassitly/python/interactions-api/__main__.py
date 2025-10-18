@@ -90,7 +90,8 @@ async def handle_message(msg: dict) -> str:
             return err("reload_failed", {"exception": str(e), "traceback": traceback.format_exc()})
     # --- Shutdown action ---
     elif action == "shutdown":
-        exit(0) # Exit
+        exit(0)
+        return ok({"message": "Shutting down"})
 
     else:
         handler = handlers.get(action)
