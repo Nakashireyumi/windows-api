@@ -11,7 +11,7 @@ packages:
 requirements: # This is used to fetch and start the required backend to run the unit tests above
   "interactions-api":
     files: [
-      "src/dev/cassitly/python/launcher.py"
+      "-m src.dev.cassitly.ython.launcher.py"
     ]
     metadata: {
       python: true
