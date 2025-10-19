@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: |
           npm install yaml chalk --save-dev
+          cd testing/cassitly
+          npm install
+          cd ../..
 
       - name: Run test runner
         shell: bash
