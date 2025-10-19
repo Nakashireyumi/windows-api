@@ -1,8 +1,5 @@
 name: Unit Tests (Cross-Platform)
 
-env:
-  VCPKG_COMMIT: f787b11768c36bba4ea3be80fbbdeb2af6895bb6
-
 on:
   push:
     branches: [ master, dev ]
@@ -26,55 +23,13 @@ jobs:
         with:
           node-version: 20
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgGitCommitId: ${{ env.VCPKG_COMMIT }}
-          runVcpkgInstall: true
-
-      - name: Compile test runner (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
+      - name: Install dependencies
         run: |
-          Write-Host "Compiling with MSVC..."
-          mkdir build
-          cd build
-          cl ../testing/run-tests.cpp /EHsc /Fe:run-tests.exe `
-           /I"${{ github.workspace }}/vcpkg_installed/x64-windows/include" `
-           /link /LIBPATH:"${{ github.workspace }}/vcpkg_installed/x64-windows/lib" yaml-cpp.lib
+          npm ci
+          npm install yaml chalk --save-dev
 
-      - name: Compile test runner (macOS)
-        if: runner.os == 'macOS'
+      - name: Run test runner
         shell: bash
         run: |
-          set -e
-          mkdir -p build && cd build
-          echo "Compiling with Clang (macOS)..."
-          ls ${{ github.workspace }}/vcpkg_installed/*/include/yaml-cpp || true
-          clang++ ../testing/run-tests.cpp -std=c++17 \
-            -I${{ github.workspace }}/vcpkg_installed/x64-osx/include \
-            -L${{ github.workspace }}/vcpkg_installed/x64-osx/lib \
-            -lyaml-cpp -o run-tests
-
-      - name: Compile test runner (Linux)
-        shell: bash
-        run: |
-          set -e
-          mkdir -p build
-          cd build
-
-          echo "Compiling with GCC (Linux)..."
-          g++ ../testing/run-tests.cpp -std=c++17 \
-            -I${{ github.workspace }}/vcpkg_installed/x64-linux/include \
-            -L${{ github.workspace }}/vcpkg_installed/x64-linux/lib \
-            -lyaml-cpp -o run-tests
-
-      - name: Run tests
-        shell: bash
-        run: |
-          cd build
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ./run-tests.exe
-          else
-            ./run-tests
-          fi
+          echo "Running JS test runner..."
+          node testing/runner.js
