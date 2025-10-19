@@ -22,6 +22,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip' # Optional: Caches pip dependencies
+          cache-dependency-path: 'src/dev/cassitly/python/requirements.txt' # Optional: Specifies the dependency file for caching
 
       - name: Install dependencies
         run: |
@@ -29,6 +36,7 @@ jobs:
           cd testing/cassitly
           npm install
           cd ../..
+          pip install -r src/dev/cassitly/python/requirements.txt          
 
       - name: Run test runner
         shell: bash
