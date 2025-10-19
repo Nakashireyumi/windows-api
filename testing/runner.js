@@ -1,4 +1,4 @@
-// testing/run-tests.js
+// testing/runner.js
 import fs from "fs";
 import { execSync } from "child_process";
 import YAML from "yaml";
