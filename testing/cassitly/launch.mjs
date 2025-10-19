@@ -41,7 +41,7 @@ async function runTests() {
 
       for (const reqFile of reqFiles) {
         const isPython = metadata.python === true;
-        const reqPath = isPython ? reqFile.replace(".py", "").replace("/", ".") : path.resolve(reqFile);
+        const reqPath = isPython ? reqFile.replace(".py", "").replaceAll("/", ".") : path.resolve(reqFile);
         const command = isPython ? "python -m" : "node";
 
         console.log(`🚀 Starting backend (${isPython ? "Python" : "Node"}): ${reqPath}`);
