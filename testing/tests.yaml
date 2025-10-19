@@ -5,6 +5,6 @@ tests: {
   # Only put your main file that launches all your tests (which should read from src/resources/unit-tests.yaml)
   # You have to also add your unit test to that config. And your launch file should read from that config.
   "cassitly": [
-    "testing/cassitly/launch.js",
+    "testing/cassitly/launch.mjs",
   ]
 }
