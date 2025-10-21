@@ -1,0 +1,48 @@
+# Windows-API Debug Configuration
+debug:
+  enabled: true
+  trace:
+    enabled: true
+    verbose: false
+    show_file_path: false
+    show_timestamp: true
+    max_value_len: 60
+    max_locals: 4
+    max_stack_depth: 12
+    use_color: true
+    include_paths:
+      - "src/dev/cassitly"
+      - "src/tests"
+    exclude_functions:
+      - "write_log"
+      - "trace"
+      - "__enter__"
+      - "__exit__"
+      - "handle"  # Don't trace handler functions unless needed
+    events:
+      - "call"
+      - "return" 
+      - "exception"
+      # - "line"  # Uncomment for very verbose line-by-line tracing
+  logging:
+    level: "INFO"
+    file: "logs/windows_api_debug.log"
+    console: true
+
+gui_automation:
+  safety:
+    failsafe: true
+    pause: 0.05
+  screenshot:
+    default_dir: "./screenshots"
+    compression: 6
+  
+server:
+  host: "127.0.0.1"
+  port: 8765
+  auth_required: true
+  max_message_size: 1048576  # 1MB
+
+performance:
+  handler_timeout: 30
+  reload_on_change: false
