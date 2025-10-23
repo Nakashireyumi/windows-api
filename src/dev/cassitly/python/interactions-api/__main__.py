@@ -1,4 +1,6 @@
 import asyncio, json, traceback, importlib, pkgutil
+import signal
+import sys
 from pathlib import Path
 import yaml
 
@@ -118,14 +120,38 @@ async def handler(websocket):
         response = await handle_message(data)
         await websocket.send(response)
 
+# Shutdown event for graceful termination
+shutdown_event = asyncio.Event()
+
+def signal_handler(sig, frame):
+    """Handle shutdown signals gracefully"""
+    print("\n[SHUTDOWN] Received shutdown signal, closing server...")
+    # Set the event in the current event loop
+    loop = asyncio.get_event_loop()
+    loop.call_soon_threadsafe(shutdown_event.set)
+
 async def main():
-    async with websockets.serve(handler, HOST, PORT, max_size=2**20):  # 1 MiB limit
-        print(f"WebSocket GUI server listening on ws://{HOST}:{PORT}")
-        print("Press Ctrl+C to stop.")
-        await asyncio.Future()  # run forever
+    server = await websockets.serve(handler, HOST, PORT, max_size=2**20)  # 1 MiB limit
+    print(f"WebSocket GUI server listening on ws://{HOST}:{PORT}")
+    print("Press Ctrl+C to stop.")
+    
+    # Wait for shutdown signal
+    await shutdown_event.wait()
+    
+    # Close server gracefully
+    print("[SHUTDOWN] Closing WebSocket server...")
+    server.close()
+    await server.wait_closed()
+    print("[SHUTDOWN] Server closed successfully")
 
 if __name__ == "__main__":
+    # Register signal handlers
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
         print("Server stopped.")
+    finally:
+        print("[SHUTDOWN] Cleanup complete")
